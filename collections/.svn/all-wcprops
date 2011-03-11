@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/neobase/!svn/ver/61/trunk/framework/system/collections
+END
+Collection.php
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/neobase/!svn/ver/61/trunk/framework/system/collections/Collection.php
+END
+List.php
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/neobase/!svn/ver/57/trunk/framework/system/collections/List.php
+END
+SortedSet.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/neobase/!svn/ver/57/trunk/framework/system/collections/SortedSet.php
+END
+Map.php
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/neobase/!svn/ver/57/trunk/framework/system/collections/Map.php
+END
+Collection.class.php
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/neobase/!svn/ver/61/trunk/framework/system/collections/Collection.class.php
+END
+MapEntry.php
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/neobase/!svn/ver/57/trunk/framework/system/collections/MapEntry.php
+END
+Set.class.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/neobase/!svn/ver/61/trunk/framework/system/collections/Set.class.php
+END
+Map.class.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/neobase/!svn/ver/57/trunk/framework/system/collections/Map.class.php
+END
+CollectionIterator.php
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/neobase/!svn/ver/57/trunk/framework/system/collections/CollectionIterator.php
+END
+ListIterator.php
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/neobase/!svn/ver/57/trunk/framework/system/collections/ListIterator.php
+END
+Comparator.php
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/neobase/!svn/ver/57/trunk/framework/system/collections/Comparator.php
+END

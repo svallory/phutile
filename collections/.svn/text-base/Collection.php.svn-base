@@ -1,0 +1,547 @@
+<?php
+/**
+ * Arquivo Collection.class.php
+ *
+ * @author Saulo Vallory
+ * @copyright 2007 Neoconn Networks
+ * @license http://projects.neoconn.com/neobase/license/1_0.txt
+ * @version SVN: $Id$
+ * @since 0.9
+ * @package Neobase.classes.system
+ *-/
+
+/**
+ * Classe Collection
+ *
+ * @author Saulo Vallory
+ * @copyright 2007 Neoconn Networks
+ * @license http://projects.neoconn.com/neobase/license/1_0.txt
+ * @version SVN: $Id$
+ * @since 0.9
+ * @package Neobase.classes.system
+ *-/
+class Collection
+{
+	/**
+	 * Constants
+	 *-/
+	 private $ERROR_OUT_OF_RANGE = "Error: Index out of range in function parameter";
+	 private $ERROR_INVALID_TYPE = "Error: Invalid type in function parameter";
+
+	/**
+	 * Collection Params
+	 *-/
+	 private $list;
+	 private $type;
+
+	/**
+	 * Function __construct()<br>
+	 * Construct function of Collection.class
+	 *
+	 *-/
+	public function __construct ($type = null)
+	{
+		$this->type = $type;
+		$this->list = array ();
+	}
+
+	/**
+	 * Function add()<br>
+	 * Appends the specified element int this List
+	 *
+	 * Note 1: If $index parameter is null, the $obj element will be added in the last index of collection.
+	 * Note 2: The insertion of the element in a busy index, will cause adjust of index of the posterior elements.
+	 *
+	 * @param mixed $obj - element whose presence in this collection is to be ensured.
+	 * @param mixed $index - position in collection where object will be added.
+	 * @return boolean false if $index have a invalid value or true if sucessful
+	 *-/
+	public function add($obj,$index = null) // boolean
+	{
+		if (is_bool($index))
+		{
+			return false;
+		}
+
+		if ( ctype_digit($index) )
+		{
+			$index = "_".$index;
+		}
+
+		if ($obj!==null && $index === null)
+		{
+			array_push($this->list,$obj);
+			return true;
+		}
+
+		if ( ($index || $index == 0) && !array_key_exists($index,$this->list))
+		{
+			$this->list[$index] = $obj;
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Function addAll()<br>
+	 * Adds all of the elements in the specified collection to this collection.
+	 *
+	 * Note: If $index have a null value, the insertion will be given from the last element of the list.
+	 *
+	 * @param array $obj - elements to be inserted into this List.
+	 * @param numeric $index - beginning index point at which to insert the first element from the specified collection.
+	 * @return boolean false if $index is an existent key in list or true if sucessful.
+	 *-/
+	public function addAll ( $objs, $index = null ) // boolean
+	{
+		if ( is_numeric( $index ) )
+		{
+			//settype($index,"integer");
+			$j = $index;
+		}
+
+		if (!$index)
+		{
+			$j = array_keys( $objs );
+		}
+
+		if (is_array($objs))
+		{
+			$count = count($objs);
+			$keys = array_keys($objs);
+
+			for ($i=0;$i<$count;$i++)
+			{
+				if( is_numeric( $j ) )
+				{
+					$this->add( $objs[ $keys[ $i ] ], '_'.$j );
+					$j++;
+				}
+				else
+				{
+					$this->add( $objs[ $keys[ $i ] ], $j[ $i ] );
+				}
+			}
+		}
+		else
+		{
+			//trigger_error ("Error: Invalid list of objects in addAll function parameter.");
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Function clear()<br>
+	 * Removes all of the elements from this collection
+	 *
+	 * @return true if this list changed.
+	 *-/
+	public function clear() // boolean
+	{
+		if ($this->isEmpty())
+		{
+			//trigger_error ("Error: collection is empty.");
+			return false;
+		}
+
+		array_splice ($this->list,0,count($this->list));
+
+		return true;
+	}
+
+	/**
+	 * Function containts()<br>
+	 * Returns true if this collection contains the specified element.
+	 *
+	 * @param object | string - object or id to search for in this collection.
+	 * @return boolean true if this collection contains the specified element.
+	 *         false if not exist element $obj in collection list.
+	 *-/
+	public function contains($param)
+	{
+		if(is_object($param))
+		{
+			$i = array_search($param, $this->list, true);
+
+			return (boolean) $i;
+		}
+		elseif (is_string($param))
+			return array_key_exists($param, $this->list);
+	}
+
+	/**
+	 * Function containtsAll()<br>
+	 * This function verifies if $collection contains all of the elements in the list of this class.
+	 *
+	 * @param array $collection - collection to be checked for containment in this collection.
+	 * @return boolean true if this collection contains all elements in the $collection parameter.
+	 *-/
+	public function containsAll ($collection)
+	{
+		$find = false;
+
+		if (is_array($collection))
+		{
+			$keys = array_keys($collection);
+
+			$j = count ($collection);
+			$find = true;
+
+			for ($i = 0; $i < $j && $find===true; $i++)
+			{
+				$find = $this->contains($collection[$keys[$i]]);
+			}
+		}
+		return $find;
+	}
+
+	/**
+	 * Function isEmpty()<br>
+	 * Return true if there are no elements in this collection
+	 *
+	 * @return true or false
+	 *-/
+	public function isEmpty ()
+	{
+		if ( count($this->list) == 0)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Function get()<br>
+	 * Returns the element at the specified $id in the list.
+	 *
+	 * @param mixed $id - id of element
+	 * @return mixed elemente contained in the list or null if $id not set.
+	 *-/
+	public function get($id)
+	{
+		if (is_numeric($id))
+		{
+			$index = "_".$id;
+
+			if( array_key_exists( $index, $this->list ) )
+				return ($this->list[$index]);
+		}
+
+		if (is_string($id))
+		{
+			if( array_key_exists( $id, $this->list ) )
+				return $this->list[$id];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Function getByPosition()<br>
+	 * Returns the element at the specified position in $pos of this list.
+	 *
+	 * @param $pos - index of element
+	 * @return mixed element at the specified position in the list or null if $index is out of range.
+	 *-/
+	public function getByPosition($pos)
+	{
+		$keys = array_keys($this->list);
+		if( array_key_exists($pos, $keys) )
+			return $this->list[ $keys[$pos] ];
+		return null;
+	}
+
+	/**
+	 * Function item()<br>
+	 * Returns the element at the specified position in this list.
+	 *
+	 * @param $pos - index of element
+	 * @return mixed element at the specified position in the list or null if $index is out of range.
+	 *-/
+	public function item($pos)
+	{
+		$keys = array_keys($this->list);
+		if( array_key_exists($pos, $keys) )
+			return $this->list[ $keys[$pos] ];
+		return null;
+	}
+
+	/**
+	 * Function getType()<br>
+	 *
+	 * Returns the type attribute of collection.
+	 *
+	 * @author Luciano (14/07/06)
+	 * @return string
+	 *-/
+	public function getType()
+	{
+		return $this->type;
+	}
+
+	/**
+	 * Function indexOf()<br>
+	 * Returns the index in this list of the first occurence of the specified element
+	 *
+	 * @param $obj - element for to get index of
+	 * @return -1 if does not have this element in $obj or index of element specified in this list
+	 *-/
+	public function indexOf ($obj)
+	{
+		$i = array_search($obj,$this->list,TRUE);
+		$i === false || $i === null ? $i=null : $i;
+
+		return $i;
+	}
+
+	/**
+	 * Function lastIndexOf()<br>
+	 * Returns the index in this list of the last occurence of the specified element.
+	 *
+	 * @param mixed $obj - element for to get index of
+	 * @return int -1 if does not have this element in $obj or index of element specified in this Collection
+	 *-/
+	public function lastIndexOf($obj) // return int
+	{
+		$auxArray = array_reverse($this->list,TRUE);
+
+		$i = array_search($obj,$auxArray,TRUE);
+		$i === false || $i === null ? $i=-1 : $i;
+
+		return $i;
+	}
+
+	/**
+	 * Function pushCollection()<br><br>
+	 * This function get a collection object and for each content in this collection adds for the object list
+	 *
+	 * @param Collection $collection
+	 * @author Luciano (28/09/2006)
+	 *
+	 * @return boolean true if sucessful or false if failure
+	 *-/
+	public function pushCollection($collection)
+	{
+		if (get_class($collection) == 'Collection')
+		{
+			$size = $collection->size();
+
+			for ($i=0; $i<$size; $i++)
+			{
+				$this->list = $collection->getByPosition($i);
+			}
+
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Function remove()<br>
+	 * Removes from the list the element at the index specified in the $index parameter
+	 *
+	 * @param mixed $index - index of element to be removed
+	 * @return boolean true for sucessful removal or false if $index is out of range in this Collection
+	 *-/
+	public function remove($index) // boolean
+	{
+		if (ctype_digit($index))
+		{
+			$index = "_".$index;
+		}
+
+		$array_keys = array_keys($this->list);
+		$i = array_search($index,$array_keys);
+
+		if ( $i !== false)
+		{
+			if ( array_splice($this->list, $i, 1)==true )
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Function removeRange()<br>
+	 * Removes from this list all of the elements whose index is between fromIndex(inclusive) and toIndex(exclusive).
+	 *
+	 * @param int $fromIndex - index of first element to be removed.
+	 * @param int $toIndex - index after last element to be removed.
+	 * @return int $numRem - amount of removed elements. If $numRem = 0 possibly $fromIndex or $toIndex have out of range value.
+	 *-/
+	public function removeRange ($fromIndex, $toIndex) // from(incluse) to(excluse) - boolean
+	{
+		if ( $this->verifyRange($fromIndex) && $this->verifyRange($toIndex-1) && $fromIndex<$toIndex)
+		{
+			$numRem = $toIndex - $fromIndex;
+
+			array_splice($this->list,$fromIndex,$toIndex);
+
+			return $numRem;
+		}
+		return 0;
+	}
+
+	/**
+	 * Function retainAll()<br>
+	 * Removes from this collection all of its elements that are not contained in the specified collection
+	 *
+	 * @param array $collection - list of elements to be retained
+	 * @return boolean false if the specified collection contains one or more elements not present in the list property of this class
+		 *         or true if retain is sucessful.
+	 *-/
+	public function retainAll ($collection)
+	{
+		if ( (is_array($collection)) && $this->containsAll($collection))
+		{
+			$count = count($collection);
+			$keys = array_keys($collection);
+
+			$this->clear();
+
+			for ($i=0; $i<$count; $i++)
+			{
+				$this->add($collection[$keys[$i]],$keys[$i]);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Function set()<br>
+	 * Replaces the element at the specified index in $index parameter in the collection with the specified element
+	 *
+	 * Note: This function is very similar with the function add(), however $index must be a valid place in list
+	 *
+	 * @param mixed $index - index of element to replace.
+	 * @param mixed $obj - element to be stored at the specified position.
+	 * @return boolean false if $index is a valid place in the list or true if sucessful replacement.
+	 *-/
+	public function set ($obj,$index) // boolean
+	{
+		if ( ctype_digit($index) )
+		{
+			$index = "_".$index;
+		}
+
+		if ( array_key_exists($index,$this->list) )
+		{
+			$this->list[$index] = $obj;
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Function setType()<br />
+	 *
+	 * @author Luciano (14/07/06)
+	 * @param string $type
+	 * @return boolean true or false
+	 *-/
+	public function setType($type)
+	{
+		if ( $type!== null   && $this->type != $type)
+		{
+			$this->type = $type;
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Function size()<br>
+	 *
+	 * @return int number of elements containded in Collection Class.
+	 *-/
+	public function size() // int
+	{
+		return count($this->list);
+	}
+
+	/**
+	 * Function toArray()<br>
+	 * A new array is allocated with the runtime type of the specified array and the size of this collection.
+	 *
+	 * @return array containing all of the elements in this collection,
+	 *         or return null if list collection is empty.
+	 *-/
+	public function toArray()
+	{
+		$auxArray = null;
+
+		if (!$this->isEmpty())
+		{
+			$keys = array_keys($this->list);
+
+			$auxArray = array();
+
+			for ($i = 0; $i<count($this->list); $i++)
+			{
+				$auxArray[$keys[$i]] = $this->list[$keys[$i]];
+			}
+		}
+		return $auxArray;
+	}
+
+	/**
+	 * Function subList()<br>
+	 * Return array part of Collection specified from $fromIndex (inclusive) and $toIndex (exclusive).
+	 * A new array is allocated with the runtime.
+	 *
+	 * @param $fromIndex - beginning index point (inclusive) of the subList.
+	 * @param $toIndex - signoff index point (exclusive) of the subList.
+	 *
+	 * @return array containing the specified elements of Collection Class.
+	 *         null if $fromIndex and $toIndex is out of range.
+	 *         null if $fronIndex > $toIndex.
+	 *
+	 *-/
+	public function subList ($fromIndex, $toIndex) //List (array)
+	{
+		$auxArray = null;
+
+		if ($this->verifyRange($fromIndex) && $this->verifyRange($toIndex) && $fromIndex<$toIndex)
+		{
+			$count = $toIndex - $fromIndex;
+			$keys = array_keys($this->list);
+
+			$auxArray = array();
+
+			for ($i=0, $j=$fromIndex;$j<$toIndex;$i++)
+			{
+				$auxArray[$i] = $this->list[$keys[$j]];
+				$j++;
+			}
+		}
+		return $auxArray;
+	}
+
+	/**
+	 * Function verifyRange()<br>
+	 * This function verify $index parameter and return true if range value betwen 0(inclusive) and size(exclusive).
+	 *
+	 * Note: $index value must be a integer type or the function will be return false
+	 *
+	 * @param int $index - range value for verification
+	 * @return boolean true or false if value is out of range
+	 *-/
+	private function verifyRange ($index)
+	{
+		if (is_integer ($index))
+		{
+			if ($index >=0 && $index <= $this->list)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+}
+*/

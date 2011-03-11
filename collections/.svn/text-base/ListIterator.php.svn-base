@@ -1,0 +1,81 @@
+<?php
+require_once(realpath(dirname(__FILE__)) . '/../../NeoBase/collections/List.php');
+
+class ListIterator {
+	/**
+	 * @AssociationType NeoBase.collections.List
+	 */
+	private $_unnamed_List_;
+
+	/**
+	 * @ParamType comp Component 2
+	 * Insere o elemento especificado na lista (operação opcional).
+	 */
+	public function add(Component_2 $comp) {
+		// Not yet implemented
+	}
+
+	/**
+	 * @ReturnType boolean
+	 * Retorna "true" caso o elemento atual não seja o último (operação opcional).
+	 */
+	public function hasNext() {
+		// Not yet implemented
+	}
+
+	/**
+	 * @ReturnType boolean
+	 * Retorna "true" caso o elemento atual não seja o primeiro (operação opcional).
+	 */
+	public function hasPrevious() {
+		// Not yet implemented
+	}
+
+	/**
+	 * @ReturnType Component 2
+	 * Retorna o próximo elemento na lista.
+	 */
+	public function next() {
+		// Not yet implemented
+	}
+
+	/**
+	 * @ReturnType int
+	 * Retorna o index do elemento que seria retornado por um "next".
+	 */
+	public function nextIndex() {
+		// Not yet implemented
+	}
+
+	/**
+	 * @ReturnType Component 2
+	 * Retorna o elemento anterior desta lista.
+	 */
+	public function previous() {
+		// Not yet implemented
+	}
+
+	/**
+	 * @ReturnType int
+	 * Retorna o index do elemento que seria retornado por um "previous".
+	 */
+	public function previousIndex() {
+		// Not yet implemented
+	}
+
+	/**
+	 * Remove da lista o último elemento que foi retornado por um "next" ou "previous" (operação opcional)
+	 */
+	public function remove() {
+		// Not yet implemented
+	}
+
+	/**
+	 * @ParamType comp Component 2
+	 * Substitui o último elemento retornado pelo "next" ou "previous" com o elemento especificado (operação opcional).
+	 */
+	public function set(Component_2 $comp) {
+		// Not yet implemented
+	}
+}
+?>
